@@ -2,6 +2,8 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div>Home</div>
+    <div>env bu: {`${process.env.NEXT_PUBLIC_API_URL}/api`}
+
+    </div>
   );
 }

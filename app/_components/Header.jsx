@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import Image from "next/image";
 import { LayoutGrid, Search, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,14 +15,29 @@ import GlobalApi from "../_utils/GlobalApi";
   
 const Header = () => {
 
+  const [categoryList, setCategoryList] = useState([]);
+
   useEffect(() => {
     getCategoryList()
   }, []);
 
   const getCategoryList=()=>{
+    
+    
     GlobalApi.getCategory().then((res)=>{
-        console.log(res)
-    })
+        if (res?.data?.data) {
+        setCategoryList(res?.data?.data);
+        console.log(res?.data?.data);
+      
+        
+        } else {
+            console.error('No category data received');
+            setCategoryList([]); 
+        }
+    }).catch(error => {
+        console.error('Error fetching categories:', error);
+        setCategoryList([]); 
+    });
   }
 
 
@@ -43,12 +58,16 @@ const Header = () => {
             Category
         </h2></DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+    <DropdownMenuLabel>Browse Category</DropdownMenuLabel>
     <DropdownMenuSeparator />
-    <DropdownMenuItem>Profile</DropdownMenuItem>
-    <DropdownMenuItem>Billing</DropdownMenuItem>
-    <DropdownMenuItem>Team</DropdownMenuItem>
-    <DropdownMenuItem>Subscription</DropdownMenuItem>
+    {categoryList && categoryList.length > 0 ? 
+      categoryList.map((category) => (
+        <DropdownMenuItem key={category.id} className="flex gap-4 items-center cursor-pointer">
+          <Image src={process.env.NEXT_PUBLIC_API_URL+category?.icon[0]?.url} alt={category.name} width={30} height={30} unoptimized={true}/>
+          <h2 className="text-lg">{category.name}</h2>
+        </DropdownMenuItem>
+      )) 
+    : null}
   </DropdownMenuContent>
 </DropdownMenu>
 

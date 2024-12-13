@@ -1,12 +1,18 @@
 const { default: axios } = require("axios");
 
 const axiosClient=axios.create({
-    baseURL:'http://localhost:1337/api'
+    baseURL:`${process.env.NEXT_PUBLIC_API_URL}/api`
 })
 
 const getCategory=async()=>{
-    const response=await axiosClient.get('/categories')
-    return response.data
+    try {
+        const response = await axiosClient.get('/categories?populate=*')
+        console.log('API Response:', response);
+        return response;
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        return { data: { data: [] } };
+    }
 }
 
 export default {
