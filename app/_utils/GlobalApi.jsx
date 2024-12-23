@@ -15,6 +15,33 @@ const getCategory=async()=>{
     }
 }
 
+const getSliders=()=>axiosClient.get(`/sliders?populate=*`).then(resp=>{
+    return resp.data?.data;
+})
+
+const getCategoryList = async () => {
+    try {
+        const response = await axiosClient.get(`/categories?populate=*`);
+        return response.data?.data;
+    } catch (error) {
+        console.error('Error fetching category list:', error);
+        return [];
+    }
+}
+
+const getAllProducts = async () => {
+    try {
+        const response = await axiosClient.get('/products?populate=*');
+        return response.data?.data;
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        return [];
+    }
+}
+
 export default {
-    getCategory
+    getCategory,
+    getSliders,
+    getCategoryList,
+    getAllProducts
 }
